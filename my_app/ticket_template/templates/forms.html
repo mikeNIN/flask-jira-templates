@@ -1,0 +1,67 @@
+{% macro render(field) %}
+    {% set current_step = kwargs.get('step', None) %}
+    {% set form = kwargs.get('form', None) %}
+
+
+    {% if current_step =='choose' %}
+
+    <div>
+    <form action="" method="post" name="choose_issuetype">
+    {{ form.csrf_token }}
+    <fieldset>
+
+        <p>
+            {{ form.issue_type_select.label }} {{ form.issue_type_select }}
+            <span class="help-inline">
+                {% if form.issue_type_select.errors %}
+                    {{ form.issue_type_select.errors|join(' ') }}
+                {% else %}
+                    {{ form.issue_type_select.help_text }}
+                {% endif %}
+                </span>
+        </p>
+        <p><input type="submit" value="Choose">
+        </p>
+    </fieldset>
+    </form>
+    </div>
+
+
+    {% elif current_step=='process' %}
+        {% set sr_all = kwargs.get('sr_all', None) %}
+        {% set project = kwargs.get('project', None) %}
+        {% set issuetype = kwargs.get('issuetype', None) %}
+
+        <p>{{ project }} {{ issuetype }}</p>
+        <form action="" method="post" name="create_template">
+            <fieldset><div class="form-group">
+                {% for field in form if field.name != "customfield_11603_child" %}
+                    {% if field.type in ['CSRFTokenField', 'HiddenField'] %} {{ field() }}
+                    {% else %}
+                        <p>{% if field.flags.required %}*{% endif %}
+                        {% if field.name in ('title', 'description_template') %} {{ field.label }} {{ field() }}
+                        {% else %}
+                            {{ field.label }} {{ field() }}
+                            {% if field.name == "customfield_11603"%}
+                                <span>{{ form['customfield_11603_child'] }}</span>
+                            {% endif %}
+                        {% endif %}
+                    {% if field.errors or field.help_text %}
+                        <span class="help-inline">
+                    {% if field.errors %}
+                        {{ field.errors|join(' ') }}
+                    {% else %}
+                        {{ field.help_text }}
+                    {% endif %}
+                </span>
+              {% endif %}
+            </p>
+          </div>
+        {% endif %}
+        {% endfor %}
+        <button type="submit">Save</button>
+    </fieldset>
+    </form>
+    {% endif %}
+{% endmacro %}
+

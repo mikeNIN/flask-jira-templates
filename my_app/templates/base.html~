@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang = "en">
+  <head>
+    <title>hotdesk-jira</title>
+  </head>
+  <body>
+    <div>HotDesk:
+        {% if g.user.is_authenticated %}
+	| <a href="{#{ url_for('ticket_templates') }#}">Ticket Templates</a>
+	| <a href="{#{ url_for('tickets_today') }#}">Tickets Today</a>
+        | <a href="{{ url_for('auth.logout') }}">Logout</a>
+        {% endif %}
+    </div>
+  
+    {% with messages = get_flashed_messages() %}
+    {% if messages %}
+    <ul>
+    {% for message in messages %}
+        <li>{{ message }} </li>
+    {% endfor %}
+    </ul>
+    {% endif %}
+    {% endwith %}
+    {% block content %}{% endblock %}
+      <hr>
+    <div> Active Directory:
+	<h1>Here user's AD attributes will be visible</h1>
+    </div>
+	{% if g.user.is_script_enabled == True %}
+    <div> HotDesk_script:
+	<h1> Here you'll be able to run script {{g.user.is_script_enabled()}}</h1>
+    </div>
+	{% endif %}
+
+  </body>
+</html>
+

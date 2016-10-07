@@ -1,0 +1,75 @@
+{% extends "base.html" %}
+
+{% block content %}
+    {% if step == 'open' %}
+        <p>{{ form_project }} {{ form_issuetype }}</p>
+        <p>{{ form_title }}</p>
+
+        <form action="" method="post" name="create_template">
+            <fieldset><div class="form-group">
+                {% for field in form if field.name != "customfield_11603_child" %}
+                    {% if field.type in ['CSRFTokenField', 'HiddenField'] %} {{ field() }}
+                    {% else %}
+                        <p>{% if field.flags.required %}*{% endif %}
+
+                            {{ field.label }} {{ field() }}
+                            {% if field.name == "customfield_11603"%}
+                                <span>{{ form['customfield_11603_child'] }}</span>
+                            {% endif %}
+
+                        {% if field.errors or field.help_text %}
+                        <span class="help-inline">
+                            {% if field.errors %}
+                                {{ field.errors|join(' ') }}
+                            {% else %}
+                                {{ field.help_text }}
+                            {% endif %}
+                        </span>
+                        {% endif %}
+                        </p>
+                    {% endif %}
+                {% endfor %}
+
+            </div>
+        <button type="submit">Create ticket</button>
+    </fieldset>
+    </form>
+    {% endif %}
+
+    {% if step == 'edit' %}
+        <p>{{ form_project }} {{ form_issuetype }}</p>
+        <p>{{ form_title }}</p>
+
+        <form action="" method="post" name="create_template">
+            <fieldset><div class="form-group">
+                {% for field in form if field.name != "customfield_11603_child" %}
+                    {% if field.type in ['CSRFTokenField', 'HiddenField'] %} {{ field() }}
+                    {% else %}
+                        <p>{% if field.flags.required %}*{% endif %}
+                        {% if field.name in ('title', 'description_template') %} {{ field.label }} {{ field() }}
+                        {% else %}
+                            {{ field.label }} {{ field() }}
+                            {% if field.name == "customfield_11603"%}
+                                <span>{{ form['customfield_11603_child'] }}</span>
+                            {% endif %}
+                        {% endif %}
+                        {% if field.errors or field.help_text %}
+                        <span class="help-inline">
+                            {% if field.errors %}
+                                {{ field.errors|join(' ') }}
+                            {% else %}
+                                {{ field.help_text }}
+                            {% endif %}
+                        </span>
+                        {% endif %}
+                        </p>
+                    {% endif %}
+                {% endfor %}
+
+            </div>
+        <button type="submit">Save template</button>
+    </fieldset>
+    </form>
+    {% endif %}
+
+{% endblock %}

@@ -1,0 +1,20 @@
+# Byte-compiled / optimized / DLL files
+*.pyc
+
+# C extensions
+*.so
+
+# Installer logs
+pip-log.txt
+pip-delete-this-directory.txt
+
+# other
+config.py
+*.py~
+*.json
+manual
+requirements.txt
+
+
+migrations/
+.idea/

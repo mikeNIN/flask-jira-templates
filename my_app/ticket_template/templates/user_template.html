@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% from "forms.html" import render %}
+{% block head %}
+{{ super() }}
+<script type="text/javascript">
+$(document).ready(
+	function () {
+        var myVar = {{ myjson|safe }};
+        console.log(myVar);
+
+        var decodedVar = decodeJSON(myVar);
+
+    }
+    );
+</script>
+
+{% endblock %}
+{% block content %}
+{{ render(form = form, step=step, sr_categories = sr_categories,
+    sr_all = sr_all, project = project, issuetype = issuetype ) }}
+
+{% endblock %}
+
+{% block footer %}
+
+{% endblock %}

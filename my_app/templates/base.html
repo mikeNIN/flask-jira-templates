@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang = "en">
+  <head>
+  {% block head %}
+    <title>hotdesk-jira</title>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8">
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+    <script type=text/javascript>
+    $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
+
+    // $(document).ready( function () {
+      var decodeJSON = function (encodedJSON) {
+        return $('<div/>').html(encodedJSON).text();
+        //console.log(decodedJSON);
+        //return $.parseJSON(decodedJSON);
+      };
+
+    </script>
+    {% endblock %}
+  </head>
+  <body>
+    <div>HotDesk:
+        {% if g.user.is_authenticated %}
+  | <a href="{{ url_for('profile.templates_list') }}">Ticket Templates</a>
+  | <a href="{{ url_for('profile.tickets_archive') }}">Tickets Today</a>
+        | <a href="{{ url_for('auth.logout') }}">Logout</a>
+        {% endif %}
+    <span><a href="{{ url_for('admin.admin_login') }}">Admin</a> </span>
+    </div>
+
+    
+    {% with messages = get_flashed_messages() %}
+    {% if messages %}
+    <ul>
+    {% for message in messages %}
+        <li> {{message}}  </li>
+    {% endfor %}
+    </ul>
+    {% endif %}
+    {% endwith %}
+    {% block content %}{% endblock %}
+      <hr>
+    <div> Active Directory:
+	<h1>Here user's AD attributes will be visible</h1>
+    </div>
+	{% if g.user.is_script_enabled == True %}
+    <div> HotDesk_script:
+  <h1> Here you'll be able to run script</h1>
+    </div>
+  {% endif %}
+    
+    {% block footer %}{% endblock %}
+  </body>
+</html>
+

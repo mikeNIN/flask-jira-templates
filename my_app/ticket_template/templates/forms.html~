@@ -1,0 +1,36 @@
+{% macro render(form) -%}
+<form action="" method="post" name="create_template">
+<fieldset>
+{% for field in form %}
+{% if field.type in ['CSRFTokenField', 'HiddenField'] %}
+  {{ field() }}
+{% else %}
+  <div class="form-group {% if field.errors %}error{% endif %}">
+    {{ field.label }} {% if field.flags.required %}*{% endif %}
+    <div class="input">
+      {% if field.name == "body" %}
+        {{ field(rows=10, cols=40) }}
+      {% else %}
+        {{ field() }} 
+	{% if field.flags.required %}<input type="checkbox" id="{{field.name}}" name = "check" value={{field.name}} {{field(readonly=true)}}>
+	{% else %} <input type="checkbox" id="{{field.name}}" name = "check" value={{field.name}}>  
+	{% endif %}
+      {% endif %}
+      {% if field.errors or field.help_text %}
+        <span class="help-inline">
+        {% if field.errors %}
+          {{ field.errors|join(' ') }}
+        {% else %}
+          {{ field.help_text }}
+        {% endif %}
+        </span>
+      {% endif %}
+    </div>
+  </div>
+{% endif %}
+{% endfor %}
+	<button type="submit">Save</button>
+</fieldset>
+</form>
+{% endmacro %}
+

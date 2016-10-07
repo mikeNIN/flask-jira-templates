@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <h1>Sign In</h1>
+
+    {% with messages = get_flashed_messages() %}
+    {% if messages %}
+    <ul>
+    {% for message in messages %}
+        <li>{{ message }} </li>
+    {% endfor %}
+    </ul>
+    {% endif %}
+    {% endwith %}
+
+    <form action="" method="post" name="login">
+        {{ form.hidden_tag() }}
+        <p>
+            {{ form.login_name(size=25) }}
+                 <span class="help-inline">
+                {% if form.login_name.errors %}
+                    {{ form.login_name.errors|join(' ') }}
+                {% else %}
+                    {{ form.login_name.help_text }}
+                {% endif %}
+                </span><br>
+            <br>
+            {{ form.password_field(size=30) }}
+                <span class="help-inline">
+                {% if form.password_field.errors %}
+                    {{ form.password_field.errors|join(' ') }}
+                {% else %}
+                    {{ form.password_field.help_text }}
+                {% endif %}
+                </span><br>
+        </p>
+
+        <p><input type="submit" value="Log In"></p>
+    </form>
+    <h3> Or go back to <a href="{{ url_for('index') }}">main</a> page
+</body>
+</html>

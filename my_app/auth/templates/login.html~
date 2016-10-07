@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% with messages = get_flashed_messages() %}
+{% endwith %}
+{% block content %}
+	<h1>Sign In</h1>
+	<form action="" method="post" name="login">
+			{{ form.hidden_tag() }}
+			<p>
+				 {{ form.login_name(size=25) }}{{form.login_name.flags}}<br>
+			<br>
+				 {{ form.password_field(size=30) }}<br>
+			</p>
+			<p><input type="submit" value="Log In"></p>
+	</form>
+
+<h3> Or go back to <a href="{{ url_for('index') }}">main</a> page 
+{% endblock %}

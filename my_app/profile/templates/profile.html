@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+
+{% block content %}
+    {% if step == 'list' %}
+	 {#% set list_of_templates = kwargs.get('templates_user', None) %#}
+        {% if not templates_user %}
+            <p>No templates found, create some</p>
+        {% else %}
+        <table>
+        <thead>
+            <tr>
+                <th>Issuetype</th><th>Title</th><th>Description</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in templates_user %}
+                <tr><td>{{ item.issuetype }}</td><td><a href="{{ url_for('profile.open_template', template_id=item.guid) }}">
+                    {{ item.title }}</a></td><td>{{ item.description }}</td>
+                <td><span><a href="{{ url_for('profile.edit_template', template_id=item.guid) }}">Edit template</a> </span></td>
+                </tr>
+            {% endfor %}
+        </tbody>
+        </table>
+        {% endif %}
+
+        <p><a href="{{ url_for('ticket_template.create_template', step='choose') }}">Create</a> new template</p>
+    {% endif %}
+
+    {% if step == 'archive' %}
+        <p>List of created tickets:</p>
+    {% endif %}
+{% endblock %}

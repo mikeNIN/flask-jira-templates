@@ -1,0 +1,9 @@
+{% extends "admin_base.html" %}
+{% from "admin_forms.html" import render %}
+{% block head %}
+{{ super() }}
+{% endblock %}
+
+{% block content %}
+    {{ render(form = form, step=step, all_list=all) }}
+{% endblock %}

@@ -1,0 +1,51 @@
+user - user Poznan
+use2 - user2 Torun
+
+admin - admin
+
+1. Create folder structure according to https://www.digitalocean.com/community/tutorials/how-to-structure-large-flask-applications and https://github.com/pallets/flask/wiki/Large-app-how-to
+
+~/LargeApp
+    |-- run.py
+    |-- config.py
+    |__ /env             # Virtual Environment
+    |__ /app             # Our Application Module
+         |-- __init__.py
+         |-- /auth   # Our first module, mod_auth
+             |-- __init__.py
+             |-- controllers.py
+             |-- models.py
+             |-- forms.py
+	     |__ /templates
+		 |--
+	     |__ /static
+		
+    	|__ /templates
+        	|-- 404.html
+		|-- base.html
+		|-- index.html
+    	|__ /static
+    |__ /tmp
+
+2. install libraries:
+	- flask, flask-login, flask-mail, flask-sqlalchemy, flask-whooshalchemy, flask-wtf, coverage,
+	    flask-migrate, sudo apt-get install libffi-dev, flask-bcrypt, (flask-admin1.4.2 not used yet)
+
+
+
+
+
+
+3. for database: PostgreSQL (https://help.ubuntu.com/community/PostgreSQL), Psycopg2 and Flask-Migrate - for migrations
+
+4. 
+
+it's possible to rewrite class from admin controlls.py filel and omit hard coded form:
+1. Select project; 
+2. Display all fields from this project
+3. On client side javascript code to move fields around to construct desired order
+4. send back to server and read source files according to order and save as _default; from now on hey should be displayed as we want it
+
+-----
+
+tools - best to put it all in one file/class(?) as a part fo synchronize process and for readability

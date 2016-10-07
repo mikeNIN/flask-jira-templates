@@ -1,0 +1,103 @@
+{% macro render(field) %}
+    {% set current_step = kwargs.get('step', None) %}
+    {% set form_admin = kwargs.get('form', None) %}
+
+    {% if current_step=='list' %}
+        {% set list_of_templates = kwargs.get('all_list', None) %}
+        {% if not list_of_templates %}
+            <p>No templates found, <a href="{{ url_for('admin.template_wizard', step='choose') }}">create</a> some</p>
+        {% else %}
+        <table>
+        <thead>
+            <tr>
+                <th>Issuetype</th><th>Title</th><th>Description</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in list_of_templates %}
+                <tr><td>{{ item.issuetype}}</td><td>{{ item.title }}</td><td>{{ item.description }}</td></tr>
+            {% endfor %}
+        </tbody>
+        </table>
+            <p><a href="{{ url_for('admin.template_wizard', step='choose') }}">Create</a> new</p>
+        {% endif %}
+    {% endif %}
+
+
+    {% if current_step=='process' %}
+        <form action="" method="post" name="create_template">
+        <fieldset>
+        <div class="form-group">
+        {#<div>
+            <p>{{ form.labels.label }} {{ form.labels}}
+            <p>{{ form.labels.label }} {{ form.labels}}
+                <input type="checkbox" id="{{form.labels.name}}" name = "save" value={{form.labels.name}}>Save
+                <input type="checkbox" id="{{form.labels.name}}" name = "required" value={{form.labels.name}}>Required
+            </p>
+            <p>{{ form.customfield_10802.label }}{{ form.customfield_10802 }}
+                <input type="checkbox" id="{{form.customfield_10802.name}}" name = "save" value={{form.customfield_10802.name}}>Save
+                <input type="checkbox" id="{{form.customfield_10802.name}}" name = "required" value={{form.customfield_10802.name}}>Required
+            </p>
+        </div>#}
+
+{# list here all standard fields with classes and visuals
+and in loop rest #}
+
+{% for field in form_admin if field.name != "customfield_11603_child" %}
+{% if field.type in ['CSRFTokenField', 'HiddenField'] %}
+  {{ field() }}
+{% else %}
+
+    <p>{% if field.flags.required %}*{% endif %} {{ field.label }}
+      {% if field.name != "resolved" %}
+        {{ field() }}
+        {% endif %}
+        {% if field.name == "customfield_11603" %}
+
+        <span>{{ form_admin.customfield_11603_child }}</span>
+        {% endif %}
+        <label for="{{field.name}}">Save</label><input type="checkbox" id="{{field.name}}" name = "save" value={{field.name}}>
+        <label for="{{field.name}}">Required</label><input type="checkbox" id="{{field.name}}" name = "required" value={{field.name}}>
+{% endif %}
+      {% if field.errors or field.help_text %}
+        <span class="help-inline">
+        {% if field.errors %}
+          {{ field.errors|join(' ') }}
+        {% else %}
+          {{ field.help_text }}
+        {% endif %}
+        </span>
+      {% endif %}
+    </p>
+  </div>
+{% endfor %}
+	<button type="submit">Save Template</button>
+</fieldset>
+</form>
+
+    {% elif current_step =='choose' %}
+    <div>
+
+    <form action="" method="post" name="choose_issuetype">
+    {{ form_admin.csrf_token }}
+    <fieldset>
+        {{ form_admin.issue_type.label }} {{ form_admin.issue_type }}
+        <p>
+            <span class="help-inline">
+                {% if form_admin.issue_type.errors %}
+                    {{ form_admin.issue_type.errors|join(' ') }}
+                {% else %}
+                    {{ form_admin.issue_type.help_text }}
+                {% endif %}
+                </span>
+        </p>
+        <p><input type="submit" value="Choose">
+        </p>
+    </fieldset>
+    </form>
+    </div>
+    {% endif %}
+{% endmacro %}
+
+
+
