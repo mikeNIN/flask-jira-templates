@@ -13,10 +13,13 @@ Unfortunately this is not extension, but can be converted to it :) So here's sho
 2. integration with Active Directory:
   1. displaying interesting user's attributes (also as separate feature)
   2. required values are copied to template form
-3. securing against jira unavailability:
+3. securing against jira unavailability: (feature not yet present)
   1. saving ready to create ticket in database
   2. info to user when they can be processed
-4. securing against changes in JIRA project:
-  1. 
+4. securing against changes in JIRA project: (feature not yet present)
+  1. synchronize saved jira templates against jira
+  2. compare and update default templates (if possible)
+  3. compare and update users templates (if possible)
+  4. inform users about it
   
 This is still work in progress, and as for today creating templates and tickets works. 
