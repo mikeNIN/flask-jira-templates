@@ -1,8 +1,0 @@
-{% extends "base.html" %}
-{% block content %}
-    {% if not g.user.is_authenticated %}
-        <h1>Hi, Please <a href="{{ url_for('auth.login') }}">login</a> to create tickets!</h1>
-    {% else %}
-        <h1>Go <a href="{{ url_for('profile.templates_list') }}">here</a> to see your templates </h1>
-    {% endif %}
-{% endblock %}
