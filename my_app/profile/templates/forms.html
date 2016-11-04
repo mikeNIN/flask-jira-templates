@@ -5,26 +5,31 @@
 
     {% if current_step =='choose' %}
 
-    <div>
-    <form action="" method="post" name="choose_issuetype">
-    {{ form.csrf_token }}
-    <fieldset>
+        <div class="jumbotron">
+            <div class="container-fluid">
+                <div>
+                    <form action="" method="post" name="choose_issuetype">
+                        {{ form.csrf_token }}
+                        <fieldset>
 
-        <p>
-            {{ form.issue_type_select.label }} {{ form.issue_type_select }}
-            <span class="help-inline">
-                {% if form.issue_type_select.errors %}
-                    {{ form.issue_type_select.errors|join(' ') }}
-                {% else %}
-                    {{ form.issue_type_select.help_text }}
-                {% endif %}
-                </span>
-        </p>
-        <p><input type="submit" value="Choose">
-        </p>
-    </fieldset>
-    </form>
-    </div>
+                        <p>
+                            {{ form.issue_type_select.label }} {{ form.issue_type_select }}
+                            <span class="help-inline">
+                            {% if form.issue_type_select.errors %}
+                                {{ form.issue_type_select.errors|join(' ') }}
+                            {% else %}
+                                {{ form.issue_type_select.help_text }}
+                            {% endif %}
+                            </span>
+                        </p>
+                        <p>
+                            <input type="submit" value="Choose">
+                        </p>
+                        </fieldset>
+                    </form>
+                </div>
+            </div>
+        </div>
 
 
     {% elif current_step=='process' %}

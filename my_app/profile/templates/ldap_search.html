@@ -1,0 +1,33 @@
+
+{% block content %}
+    <h2> Search user: </h2>
+
+    <form id="ldap_search" action="">
+        <input type="text" class="form-control" id="user_search" name="user_search"  placeholder="Search user...">
+    </form>
+
+    <p id="result"> </p>
+
+    <div class="dropdown">
+
+        <button class="btn btn-default dropdown-toggle" type="button" id="search_ad_results" data-toggle="dropdown">
+            Results
+        <span class="caret"></span></button>
+        <span class="ldap_search_info hidden" id="ldap_search_info"></span>
+        <ul class="dropdown-menu hidden" id="ldap_results">
+
+        </ul>
+    </div>
+        <div id="ldap_user_info">
+        {% for element in attr %}
+            <div class="row">
+                <div class="col-md-3">
+                    <label>{{ attr[element] }}</label>
+                </div>
+                <div class="col-md-4">
+                    <input id={{ element }} class="text-left">
+                </div>
+            </div>
+        {% endfor %}
+        </div>
+{% endblock %}

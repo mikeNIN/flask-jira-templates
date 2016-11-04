@@ -48,7 +48,8 @@ class ADConn(object):
                 user=user,
                 password=password,
                 authentication=NTLM,
-                lazy=False
+                lazy=False,
+                return_empty_attributes=True
             )
         except LDAPException as e:
             return False, e.message
@@ -89,18 +90,18 @@ class ADConn(object):
         user_filter = '(sAMAccountName={0})'.format(user)
         search_filter_local = '(&{0}{1})'.format(user_filter, search_filter)
 
-        try:
-            # search user in AD based on criteria
-            self.connection.search(base_dn, search_filter_local, search_scope, attributes=[attributes])
-            response = self.connection.response
-            attribute = response[0]['attributes']
+        self.connection.search(base_dn, search_filter_local, search_scope, attributes=[attributes])
+        response = self.connection.response
+        print response
+        attribute = response[0]['attributes']
+        print attribute
 
-            # try to connect with this user's DN
-            conn = self.connect(username, password)
-            conn.unbind()
-            return True, attribute
-        except (LDAPInvalidDnError, LDAPInvalidFilterError, IndexError, LDAPBindError) as e:
-            return False, e.message
+        # try to connect with this user's DN
+        conn = self.connect(username, password)
+        print conn
+        conn.unbind()
+        return True, attribute
+
 
 
 

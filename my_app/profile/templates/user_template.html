@@ -1,0 +1,13 @@
+{% extends "base_navbar.html" %}
+
+{% from "forms.html" import render %}
+
+{% block content %}
+{{ render(form = form, step=step, sr_categories = sr_categories,
+    sr_all = sr_all, project = project, issuetype = issuetype ) }}
+
+{% endblock %}
+
+{% block footer %}
+
+{% endblock %}
