@@ -1,32 +1,61 @@
-{% extends "base.html" %}
+{% extends "base_profile.html" %}
+{% import "bootstrap/utils.html" as utils %}
+
 
 {% block content %}
-    {% if step == 'list' %}
-	 {#% set list_of_templates = kwargs.get('templates_user', None) %#}
-        {% if not templates_user %}
-            <p>No templates found, create some</p>
-        {% else %}
-        <table>
-        <thead>
-            <tr>
-                <th>Issuetype</th><th>Title</th><th>Description</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for item in templates_user %}
-                <tr><td>{{ item.issuetype }}</td><td><a href="{{ url_for('profile.open_template', template_id=item.guid) }}">
-                    {{ item.title }}</a></td><td>{{ item.description }}</td>
-                <td><span><a href="{{ url_for('profile.edit_template', template_id=item.guid) }}">Edit template</a> </span></td>
-                </tr>
-            {% endfor %}
-        </tbody>
-        </table>
-        {% endif %}
+    <div class="modal-body row">
+        <div class="col-md-7">
+            <div class="jumbotron">
+                <div class="container-fluid">
+                    {#% set list_of_templates = kwargs.get('templates_user', None) %#}
+                    <h2> Your templates: </h2>
+                    <ul class="list-group">
+                        {% for item in templates_user %}
+                            <li class="list-group-item clearfix" style="display: flex; align-items: center">
+                                <div class="col-md-7" style="word-wrap: break-word; display: inline-block">
+                                    <h4 class="list-group-item-heading">{{ item.title }}</h4>
+                                    <p class="list-group-item-text"> {{ item.description }}
+                                        {% if item.issuetype == 'Incident' %}
+                                            <span class="label label-danger">{{ item.issuetype }}</span>
+                                        {% elif item.issuetype == 'Service Request' %}
+                                            <span class="label label-primary">{{ item.issuetype }}</span>
+                                        {% elif item.issuetype == 'SR-Permission' %}
+                                            <span class="label label-success">{{ item.issuetype }}</span>
+                                        {% elif item.issuetype == 'Task' %}
+                                            <span class="label label-default">{{ item.issuetype }}</span>
+                                        {% endif %}
+                                    </p>
+                                </div>
+                                <div class="col-md-5">
+                                    <span class="pull-right button-group">
+                                        <a href="{{ url_for('profile.edit_template', template_id=item.guid) }}"
+                                           class="btn btn-primary"><span class="glyphicon glyphicon-edit"></span>
+                                    Edit</a>
+                                    <a href="{{ url_for('profile.open_template', template_id=item.guid) }}"
+                                       class="btn btn-primary"><span class="glyphicon glyphicon-open"></span> Open</a>
+                                    </span>
+                                </div>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                    {% if not templates_user %}
+                        <p>No templates found, create some</p>
+                    {% else %}
 
-        <p><a href="{{ url_for('ticket_template.create_template', step='choose') }}">Create</a> new template</p>
-    {% endif %}
+                    {% endif %}
 
-    {% if step == 'archive' %}
-        <p>List of created tickets:</p>
-    {% endif %}
+                    <p><a href="{{ url_for('.create_template', step='choose') }}">Create</a> new template
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-5">
+            <div class="jumbotron">
+                <div class="container-fluid">
+                    {% include "ldap_search.html" %}
+                </div>
+            </div>
+        </div>
+    </div>
 {% endblock %}

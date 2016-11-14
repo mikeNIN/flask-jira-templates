@@ -7,7 +7,6 @@ import wtforms.validators
 class FieldHandler:
     def __init__(self, fields):
         self.formfields = {}
-        print fields
         for field in fields:
             if field['name'] not in ('project', 'issuetype'):
                 options = self.get_options(field)
@@ -27,11 +26,6 @@ class FieldHandler:
 
     def create_field_for_textarea(self, field, options):
         return wtforms.fields.TextAreaField(**options)
-
-    def create_field_for_integer(self, field, options):
-        options['max_value'] = int(field.get("max_value", "999999999") )
-        options['min_value'] = int(field.get("min_value", "-999999999") )
-        return wtforms.fields.IntegerField(**options)
 
     def create_field_for_checkbox(self, field, options):
         return wtforms.fields.BooleanField(**options)

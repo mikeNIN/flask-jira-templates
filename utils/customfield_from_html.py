@@ -19,6 +19,7 @@ httplib.HTTPConnection.debuglevel = 0
 
 print requests.__version__
 
+
 def get_from_jira(url):
     try:
         response = requests.get(
@@ -54,7 +55,7 @@ def get_from_jira(url):
             child = source_children[0].find_all(class_=re.compile(option_class))
             child_list = [item.getText() for item in child]
             categories_sr.update({parent_category: child_list})
-
+            # add None : None - needs to be default
         try:
             json.dump(categories_sr, file('customfield_11603.json', 'w'), indent=4, sort_keys=True)
             return True

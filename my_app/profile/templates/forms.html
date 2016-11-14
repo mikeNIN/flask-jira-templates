@@ -38,8 +38,9 @@
         {% set issuetype = kwargs.get('issuetype', None) %}
 
         <p>{{ project }} {{ issuetype }}</p>
-        <form action="" method="post" name="create_template">
+        <form id="create_template" action="" method="post" name="create_template">
             <fieldset><div class="form-group">
+{#            {{ form.time_spent }}#}
                 {% for field in form if field.name != "customfield_11603_child" %}
                     {% if field.type in ['CSRFTokenField', 'HiddenField'] %} {{ field() }}
                     {% else %}
@@ -51,6 +52,7 @@
                                 <span>{{ form['customfield_11603_child'] }}</span>
                             {% endif %}
                         {% endif %}
+
                     {% if field.errors or field.help_text %}
                         <span class="help-inline">
                     {% if field.errors %}

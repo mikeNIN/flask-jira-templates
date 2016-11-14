@@ -1,10 +1,11 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+{% extends 'admin_base.html' %}
 
-</body>
-</html>
+{% block content %}
+
+    <h3>Configure JIRA default templates</h3>
+    <a href="{{ url_for('admin.template_wizard', step='list') }}">Configure</a>
+
+    <h3>Configure AD fields</h3>
+    <a href="{{ url_for('admin.ad_module') }}">Configure</a>
+
+{% endblock %}

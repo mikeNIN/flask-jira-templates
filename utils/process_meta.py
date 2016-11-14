@@ -122,7 +122,7 @@ def process_files():
                 # print 'required', jira_fields[key]['required']
                 val_1.append('select')
                 keys_1.append('choices')
-                val_1.append([{"name": " ", "value": " "} , {"name": "Other", "value": "Other"}])
+                val_1.append([{"name": " ", "value": " "}])
                 # print main_sr
                 fields_list.append(dict(zip(keys_1, val_1)))
 

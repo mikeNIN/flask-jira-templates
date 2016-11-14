@@ -1,22 +1,38 @@
-{% extends "base.html" %}
+{% extends "base_auth.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+{% import "bootstrap/utils.html" as utils %}
+
+
 {% block content %}
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                {{utils.flashed_messages(dismissible=True)}}
+            </div>
+        </div>
+
     {% if error %}
         <p class=error><strong>Error:</strong> {{ error }}
     {% endif %}
-    <h1>Sign In</h1>
-    <form action="" method="post" name="login">
-        {{ form.hidden_tag() }}
-        <p>
-            {{ form.login_name(size=25) }} 
-                 <span class="help-inline">
+
+        <form class="form-signin" action="" method="post" name="login">
+            {{ form.hidden_tag() }}
+            {{ wtf.form_errors(form, hiddens="only") }}
+            <h2 class="form-signin-heading"> Please sign in</h2>
+            <label for="inputUser" class="sr-only">{{ form.login_name.label }}</label>
+            <input type="text" id="login_name" class="form-control"
+                   name={{ form.login_name.name}} placeholder="Username" required autofocus>
+            <span class="help-inline">
                 {% if form.login_name.errors %} 
                     {{ form.login_name.errors|join(' ') }}
                 {% else %}
                     {{ form.login_name.help_text }}
                 {% endif %}
-                </span><br>
-            <br>
-            {{ form.password_field(size=30) }} 
+                </span>
+
+            <label for="inputPassword" class="sr-only">{{ form.password_field.label }}</label>
+            <input type="password" id="password_field" class="form-control"
+                name={{ form.password_field.name }} placeholder="Password" required>
                 <span class="help-inline">
                 {% if form.password_field.errors %} 
                     {{ form.password_field.errors|join(' ') }}
@@ -24,10 +40,7 @@
                     {{ form.password_field.help_text }}
                 {% endif %}
                 </span><br>
-        </p>        
-        
-        <p><input type="submit" value="Log In"></p>
-    </form>
-
-<h3> Or go back to <a href="{{ url_for('index') }}">main</a> page 
+            <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
+        </form>
+    </div>
 {% endblock %}

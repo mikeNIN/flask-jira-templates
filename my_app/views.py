@@ -1,9 +1,10 @@
 #!/usr/bin/python
 
-from flask import render_template, g
+from flask import render_template, g, redirect, url_for
 from flask.ext.login import current_user
 
 from my_app import app
+from my_app import profile
 
 
 @app.before_request
@@ -16,4 +17,7 @@ def before_request():
 
 @app.route('/')
 def index():
-    return render_template('index.html')
+    if g.user is not None:
+        return redirect(url_for('profile.templates_list'))
+    else:
+        return redirect(url_for('auth.login'))

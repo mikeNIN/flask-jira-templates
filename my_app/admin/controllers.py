@@ -12,9 +12,9 @@ from wtforms.validators import InputRequired
 from my_app import lm, bcrypt, db, app
 from my_app.auth.forms import LoginForm
 from my_app.auth.models import Users, TicketTemplate
-from my_app.ticket_template import dynaform
-
-from tools.process_form_request import process_all
+from utils import dynaform
+from utils.ldap_form import SimpleForm
+from utils.process_form_request import process_all
 
 # Define the blueprint: 'admin'
 admin = Blueprint('admin', __name__, template_folder='templates', static_folder='static')
@@ -37,6 +37,7 @@ def load_user(id):
 @admin.route('/admin', methods=['GET', 'POST'])
 @admin.route('/admin/', methods=['GET', 'POST'])
 def admin_login():
+    print app.config
     # If sign in form is submitted
     if g.user is None or not g.user.is_admin():
         form = LoginForm(request.form)
@@ -47,11 +48,31 @@ def admin_login():
                 db.session.add(user)
                 db.session.commit()
                 login_user(user)
-                return redirect(url_for('admin.template_wizard', step='list'))
+                return redirect(url_for('admin.admin_index'))
             flash("Username or Password is invalid", 'error')
         return render_template('admin_login.html', form=form)
     else:
-        return redirect(url_for('admin.template_wizard', step='list'))
+        return redirect(url_for('admin.admin_index'))
+
+
+@admin.route('/admin/index')
+@login_required
+def admin_index():
+    return render_template('admin_index.html')
+
+
+@admin.route('/admin/AD', methods=['GET', 'POST'])
+@login_required
+def ad_module():
+    form = SimpleForm()
+    if form.validate_on_submit():
+        attr_list = form.attr_form.data
+        app.config.update(AD_ATTR=attr_list)
+        return redirect(url_for('.admin_index'))
+    else:
+        flash('choose at least one attribute', 'error')
+        # print form.errors
+    return render_template('admin_AD_module.html', form=form)
 
 
 @admin.route('/admin/logout', methods=['GET'])
@@ -134,7 +155,6 @@ def template_wizard(step):
                            'customfield_11600', 'customfield_11603', 'customfield_11603_child', 'description')
 
         form = FormDefault(request.form)
-        print request.form
         step = 'process'
         formdata = None
         if request.method == 'POST':

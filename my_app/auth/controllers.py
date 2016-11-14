@@ -11,7 +11,8 @@ from my_app.auth.forms import LoginForm
 from .models import Users
 
 # Define the blueprint: 'auth'
-auth = Blueprint('auth', __name__, template_folder='templates', static_folder='static')
+auth = Blueprint('auth', __name__, template_folder='templates', static_folder='static',
+                 static_url_path=app.config['BASE_DIR']+'/my_app/auth')
 
 
 # Set the route and accepted methods
@@ -40,13 +41,16 @@ def login():
     form = LoginForm(request.form)
 
     if request.method == 'POST' and form.validate_on_submit():
+        print request.method
         user = request.form.get('login_name')
         username = app.config['LDAP_DOMAIN'] + user
         password = request.form.get('password_field')
         try:
             auth_object = ldap_ac.authenticate(username, password, 'l', app.config['LDAP_BASE_DN'],
                                                app.config['LDAP_FILTER'])
+            print auth_object
             user_db = Users.query.filter_by(username=user).first()
+            print user_db
             if not user_db:
                 user_db = Users(username=user, town=auth_object[1]['l'][0].lower(), role='USER')
             user_db.authenticated = True
@@ -55,6 +59,7 @@ def login():
             login_user(user_db)
             return redirect(url_for('index'))
         except:
+            print 'bledne haslo'
             flash(
                 'Invalid username or password. Please try again.',
                 'danger')

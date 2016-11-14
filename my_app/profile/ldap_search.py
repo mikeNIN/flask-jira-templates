@@ -1,16 +1,11 @@
 from ldap3 import SUBTREE, ALL_ATTRIBUTES
 
 from flask import jsonify, request
-from flask.ext.wtf import Form
-from wtforms import widgets, SelectMultipleField, SubmitField
 
 from my_app import app, ldap_ac
 
 
-
-
-
-@app.route('/_search_user')
+@app.route('/profile/_search_user')
 def search_ldap_user():
     print 'search user'
     user = request.args.get('in_string', '', type=str)
