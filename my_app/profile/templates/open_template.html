@@ -2,6 +2,14 @@
 {% import "bootstrap/utils.html" as utils %}
 
 {% block content %}
+
+  {%- with messages = get_flashed_messages(with_categories=True) %}
+  {%- if messages %}
+
+        {{utils.flashed_messages(messages, dismissible=True)}}
+  {%- endif %}
+  {%- endwith %}
+
     <div class="modal-body row">
         <div class="col-md-7">
             <div class="jumbotron">
@@ -10,7 +18,7 @@
 <p>{{ form_project }} {{ form_issuetype }}</p>
         <p>{{ form_title }}</p>
 
-        <form action="" method="post" name="create_template">
+        <form action="" method="post">
             <fieldset><div class="form-group">
                 {% for field in form if field.name != "customfield_11603_child" %}
                     {% if field.type in ['CSRFTokenField', 'HiddenField'] %} {{ field() }}

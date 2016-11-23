@@ -6,13 +6,15 @@ var search_result;
 var new_input = true;
 
 function init() {
-    var form = document.getElementById('ldap_search');
-    form.addEventListener("submit", search_ldap, false);
-    form.addEventListener("change", clear_all, false);
+    var link = document.getElementById('ldap_search');
+    var input = document.getElementById('user_search');
+    link.addEventListener("click", search_ldap, false);
+    input.addEventListener("change", clear_all, false);
 }
 
 var handleResponse = function (status, response) {
     var response_parsed = JSON.parse(response);
+
     search_result = response_parsed['result'];
     populate_select();
     new_input = false;
@@ -44,6 +46,7 @@ function search_ldap(e) {
     // get user name to search
     var name_to_search = document.getElementById("user_search").value;
 
+
     var proceed = true;
     if (name_to_search === "") {
         name_input.setAttribute("style", "border-color: red");
@@ -59,6 +62,7 @@ function search_ldap(e) {
         var body = document.getElementsByTagName("BODY")[0];
         var url = body.dataset.root;
         var params = {'username': name_to_search};
+        console.log(params);
         httpRequest.open('POST', url);
         //send headers
         httpRequest.setRequestHeader('Content-Type', 'application/json;charset=UTF-8');

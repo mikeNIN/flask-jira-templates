@@ -1,5 +1,6 @@
 {%- extends "bootstrap/base.html" %}
 {% import "bootstrap/fixes.html" as fixes %}
+{% import "bootstrap/utils.html" as utils %}
 
 {% block title %}JIRA Hotdesk{% endblock %}
 
@@ -15,6 +16,9 @@
           href="{{ url_for('static', filename='base_style.css') }}">
 {% endblock %}
 
+<body {% block body_attribs %} data-root="{{ url_for('.search_ldap_user') }}" {% endblock body_attribs %}  >
+{% block body  %}
+
 {% block navbar %}
     {% include 'navbar.html' %}
 {% endblock %}
@@ -26,6 +30,10 @@
     <script type="text/javascript" src={{ url_for('profile.static', filename='validate.js') }} ></script>
     <script type="text/javascript"> set_sr_cat({{ sr_all|safe|tojson }}) </script>
 {% endblock %}
+    {% block content %}
+        {% endblock %}
+{% endblock body %}
+</body>
 
 
 

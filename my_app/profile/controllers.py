@@ -1,8 +1,10 @@
 #!/usr/bin/python
 
-import json
+import json, ast, time
 
 from ldap3 import SUBTREE
+
+from jira import JIRAError
 
 from flask import (
     render_template, g, request, Blueprint, redirect, url_for,
@@ -17,7 +19,7 @@ from my_app import app, jira_conn, lm, ldap_ac
 from my_app.auth.models import TicketTemplate, Users
 from utils import dynaform
 from utils.process_form_request import process_all
-from utils.test import create_ticket_jira
+from utils.create_ticket import create_ticket_jira
 
 # Define the blueprint: 'profile'
 profile = Blueprint('profile', __name__, template_folder='templates',
@@ -71,6 +73,7 @@ def tickets_archive():
 @profile.route('/my_templates/<template_id>', methods=['GET', 'POST'])
 @login_required
 def open_template(template_id):
+
     # open template to create ticket
     chosen_template = TicketTemplate.query.filter_by(guid=template_id).first()
     chosen_template_json = json.loads(chosen_template.json_form)
@@ -99,9 +102,15 @@ def open_template(template_id):
     sr_all = json.dumps(sr_categories)
 
     if request.method == 'POST':
+
         if form.validate_on_submit():
-            create_ticket_jira(request.form, issuetype=form_issuetype, project=form_project)
-            return redirect(url_for('profile.templates_list'))
+            response = create_ticket_jira(request.form, issuetype=form_issuetype, project=form_project)
+            if isinstance(response, JIRAError):
+                # we got an error
+                flash(response.text, 'error')
+            else:
+                # dict_ = ast.liter al_eval(text.response.text)
+                return redirect(url_for('profile.templates_list'))
         else:
             flash('there were errors processing your request', 'error')
     return render_template('open_template.html', **locals())
@@ -146,6 +155,7 @@ def edit_template(template_id):
     form_project = chosen_template.project
     sr_all = json.dumps(sr_categories)
 
+    print (locals())
     if request.method == 'POST':
         if form.validate_on_submit():
             print request.form
