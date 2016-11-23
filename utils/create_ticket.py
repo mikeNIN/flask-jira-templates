@@ -58,5 +58,4 @@ def create_ticket_jira(request, **kwargs):
     standard = {'project': {'key': project}, 'issuetype': {'name': issuetype}}
     fields = dict(ticket, **standard)
 
-    issue = jira_conn.create_issue(fields)
-    print issue
+    return jira_conn.create_issue(fields)
