@@ -3,6 +3,8 @@
 
 {% block content %}
 
+
+
   {%- with messages = get_flashed_messages(with_categories=True) %}
   {%- if messages %}
 
@@ -17,7 +19,6 @@
 
 <p>{{ form_project }} {{ form_issuetype }}</p>
         <p>{{ form_title }}</p>
-
         <form action="" method="post">
             <fieldset><div class="form-group">
                 {% for field in form if field.name != "customfield_11603_child" %}

@@ -1,6 +1,6 @@
 #!/usr/bin/python
 
-import json, ast, time
+import json, urllib2
 
 from ldap3 import SUBTREE
 
@@ -12,10 +12,10 @@ from flask import (
 )
 from flask.ext.login import login_required, current_user
 from flask_wtf import Form
-from wtforms import StringField, SelectField, BooleanField, IntegerField
+from wtforms import StringField, SelectField, BooleanField
 from wtforms.validators import InputRequired
 
-from my_app import app, jira_conn, lm, ldap_ac
+from my_app import app, jira_conn, lm, ldap_ac, db
 from my_app.auth.models import TicketTemplate, Users
 from utils import dynaform
 from utils.process_form_request import process_all
@@ -25,6 +25,14 @@ from utils.create_ticket import create_ticket_jira
 profile = Blueprint('profile', __name__, template_folder='templates',
                     static_folder='static', static_url_path=app.config['BASE_DIR'] + '/my_app/profile')
 
+#######################################################
+# helper function, return jira status can be ['ONLINE', 'OFFLINE', 'SYNCHRO']
+# SYNCHRO - rebuilding templates - access suspended
+
+
+def get_jira_status():
+    jira_stat = db.engine.execute("SELECT status FROM JIRA_STATUS").fetchone()
+    return jira_stat[0]
 
 
 @lm.user_loader
@@ -41,7 +49,7 @@ def before_request():
     else:
         g.user = None  # or 'some fake value', whatever
 
-
+    g.status = get_jira_status()
 
 
 @profile.route('/my_templates')
@@ -73,7 +81,6 @@ def tickets_archive():
 @profile.route('/my_templates/<template_id>', methods=['GET', 'POST'])
 @login_required
 def open_template(template_id):
-
     # open template to create ticket
     chosen_template = TicketTemplate.query.filter_by(guid=template_id).first()
     chosen_template_json = json.loads(chosen_template.json_form)
@@ -101,19 +108,34 @@ def open_template(template_id):
     attr = app.config['AD_ATTR']
     sr_all = json.dumps(sr_categories)
 
+    if request.method == 'GET':
+        if g.status == 'ONLINE':
+            return render_template('open_template.html', **locals())
+        if g.status == 'OFFLINE':
+            flash("JIRA is Offline", "info")
+            return render_template('open_template.html', **locals())
+        if g.status == 'SYNCHRO':
+            print 'synchro'
+
     if request.method == 'POST':
+        print g.status
+        import httplib2
+        h = httplib2.Http()
+        resp = h.request(app.config['JIRA_SERVER'], 'HEAD')
+        assert int(resp[0]['status']) < 400
 
         if form.validate_on_submit():
             response = create_ticket_jira(request.form, issuetype=form_issuetype, project=form_project)
             if isinstance(response, JIRAError):
                 # we got an error
+                print "text " + response
                 flash(response.text, 'error')
             else:
                 # dict_ = ast.liter al_eval(text.response.text)
                 return redirect(url_for('profile.templates_list'))
         else:
             flash('there were errors processing your request', 'error')
-    return render_template('open_template.html', **locals())
+    # return render_template('open_template.html', **locals())
 
 
 @profile.route('/my_templates/edit/<template_id>', methods=['GET', 'POST'])
@@ -155,7 +177,6 @@ def edit_template(template_id):
     form_project = chosen_template.project
     sr_all = json.dumps(sr_categories)
 
-    print (locals())
     if request.method == 'POST':
         if form.validate_on_submit():
             print request.form

@@ -24,6 +24,7 @@ __all__ = ('JIRAConn',)
 class JIRAConn(object):
 
     jiraer.log_to_tempfile = False
+
     def __init__(self, app=None):
         self.app = app
         if app is not None:
@@ -47,7 +48,12 @@ class JIRAConn(object):
                              get_server_info=False)
             return jira_conn
         except jiraer as e:
+            print "connect excetion"
             return e
+        except requests.HTTPError as e:
+            print "another " + e
+        except requests.ConnectionError as e:
+            print "cerr " + e
 
     def teardown(self, exception):
         if hasattr(g, 'jira_conn'):

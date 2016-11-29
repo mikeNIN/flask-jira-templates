@@ -40,7 +40,7 @@ def admin_login():
     print app.config
     # If sign in form is submitted
     if g.user is None or not g.user.is_admin():
-        form = LoginForm(request.form)
+        form = LoginForm()
         if form.validate_on_submit():
             user = Users.query.filter_by(username=form.login_name.data).first()
             if user and user.is_admin() and bcrypt.check_password_hash(user.passwd, form.password_field.data):
@@ -154,7 +154,7 @@ def template_wizard(step):
             field_order = ('project', 'summary', 'issuetype', 'labels', 'customfield_10802', 'assignee', 'reporter',
                            'customfield_11600', 'customfield_11603', 'customfield_11603_child', 'description')
 
-        form = FormDefault(request.form)
+        form = FormDefault()
         step = 'process'
         formdata = None
         if request.method == 'POST':
